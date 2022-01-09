@@ -17,7 +17,7 @@ public class Graph {
     
     public Graph() 
     {
-        V = new HashSet<Vertex>();
+        V = new HashSet<>();
     }
     
     public void addVertex(Point p) 
@@ -112,9 +112,10 @@ public class Graph {
         
         try 
         {
+            this.restartBFS();
             breadthFirstSearch(start);
                
-            Vertex u =  null;
+            Vertex u;
             Vertex pre = null;
             ArrayList<Point> shortestPathList = new ArrayList<>();
             
@@ -134,7 +135,6 @@ public class Graph {
                 pre = pre.predecessor;
             }
             
-            
             return shortestPathList;
         }
         catch(Exception e) 
@@ -145,5 +145,14 @@ public class Graph {
         return null;
     }
     
+    public void restartBFS()
+    {
+        for(Vertex v : V)
+        {
+            v.color = Color.WHITE;
+            v.distance = 0;
+            v.predecessor = null;
+        }
+    }
     
 }

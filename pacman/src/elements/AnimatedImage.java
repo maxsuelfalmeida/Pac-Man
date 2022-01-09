@@ -21,10 +21,10 @@ public class AnimatedImage {
      * @param direction
      * @return
      */
-    public Image getFrame(int direction)
+    public Image getFrame(int direction, int corr)
     {
         int index;
-        index = 4 * direction + (int)(System.nanoTime() * 0.00000002) % 4;
+        index = corr * direction + (int)(System.nanoTime() * 0.00000002) % corr;
         return frames[index];
     }
 }

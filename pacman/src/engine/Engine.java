@@ -1,10 +1,12 @@
 package engine;
 
 import elements.Board;
+import elements.Element;
+import elements.Ghost;
+import elements.GhostType;
 import elements.PacMan;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.Random;
 import javafx.scene.input.KeyCode;
 
 /**
@@ -17,26 +19,26 @@ public class Engine {
     
     public KeyCode direction;
     public KeyCode nextDirection;
-    private double colAux;
-    private double rowAux;
+    public double colAux;
+    public double rowAux;
     
-    public Engine()
+    public Engine(double rowAux, double colAux)
     {
         direction = KeyCode.UNDEFINED;
         nextDirection = direction;
-        colAux = 14;
-        rowAux = 23;
+        this.colAux = colAux;
+        this.rowAux = rowAux;
     }
     
-    public void pacMove(PacMan pacMan, Board board)
+    public void move(Element elem, Board board)
     {
-        int col = pacMan.getColumn();
-        int row = pacMan.getRow();
-        double x = pacMan.getX();
-        double y = pacMan.getY();
-        int propX = pacMan.getProportionX();
-        int propY = pacMan.getProportionY();
-        double vel = pacMan.getVelocity();
+        int col = elem.getColumn();
+        int row = elem.getRow();
+        double x = elem.getX();
+        double y = elem.getY();
+        int propX = elem.getProportionX();
+        int propY = elem.getProportionY();
+        double vel = elem.getVelocity();
         
         
         switch(direction)
@@ -94,18 +96,18 @@ public class Engine {
                 break;
         }
         
-        pacMan.setColumn(col);
-        pacMan.setRow(row);
-        pacMan.setX(x);
-        pacMan.setY(y);
+        elem.setColumn(col);
+        elem.setRow(row);
+        elem.setX(x);
+        elem.setY(y);
     }
     
-    public void shiftDirection(PacMan pacMan, Board board)
+    public void shiftDirection(Element elem, Board board)
     {
-        int col = pacMan.getColumn();
-        int row = pacMan.getRow();
-        double x = pacMan.getX();
-        double y = pacMan.getY();
+        int col = elem.getColumn();
+        int row = elem.getRow();
+        double x = elem.getX();
+        double y = elem.getY();
         
         switch(nextDirection)
         {
@@ -126,12 +128,94 @@ public class Engine {
                 
             case DOWN:
                 direction = (!board.cells.get(28 * row + col + 28).isWall(board.maze) 
-                             && !board.cells.get(28 * row + col + 28).isGhostHouse(board.maze)
+                             && (Ghost.class.isInstance(elem) || !board.cells.get(28 * row + col + 28).isGhostHouse(board.maze)) 
                              && x >= (28 * col - 7) && (x + 28) <= (28 * (col + 1) + 7)) ? nextDirection : direction;
                 break;
                 
             default:
+                System.out.println(elem.getClass() != Ghost.class);
                 break;
         }
+    }
+    
+    /*-----------------------------------------------------------Ghost Methods ------------------------------------------------------------------*/
+    
+    public ArrayList<Point> getPath(Ghost ghost, Board board, PacMan pacMan)
+    {
+        ArrayList<Point> path;
+        
+        switch(ghost.mode)
+        {
+            case NORMAL:
+                if(ghost.type == GhostType.PINKY || ghost.type == GhostType.BLINKY)
+                    path = board.mazeGraph.shortestPath(new Point(ghost.getRow(), ghost.getColumn()), new Point(pacMan.getRow(), pacMan.getColumn()));
+                else
+                    path = this.getRandomPath(ghost, board);
+                    
+                break;
+            case VULNERABLE:
+                path = this.runaway();
+                break;
+                
+            default:
+                path = this.backToGhostHouse(ghost, board);
+                break;
+        }
+        
+        return path;
+    }
+    
+    
+    public ArrayList<Point> runaway()
+    {
+        return null;
+    }
+    
+    public ArrayList<Point> backToGhostHouse(Ghost ghost, Board board)
+    {
+        ArrayList<Point> path;
+        
+        switch(ghost.type)
+        {
+            case INKY:
+                path = board.mazeGraph.shortestPath(new Point(ghost.getRow(), ghost.getColumn()), new Point(14, 13));
+                break;
+                
+            case CLYDE:
+                path = board.mazeGraph.shortestPath(new Point(ghost.getRow(), ghost.getColumn()), new Point(14, 14));
+                break;
+                
+            case PINKY:
+                path = board.mazeGraph.shortestPath(new Point(ghost.getRow(), ghost.getColumn()), new Point(13, 13));
+                break;
+                
+            default:
+                path = board.mazeGraph.shortestPath(new Point(ghost.getRow(), ghost.getColumn()), new Point(13, 14));
+                break;
+        }
+        return path;
+    }
+    
+    public ArrayList<Point> getRandomPath(Ghost ghost, Board board)
+    {
+        Random generator = new Random();
+        int row, col;
+        int grow, gcol;
+        int prow, pcol;
+        
+        grow = ghost.getRow();
+        gcol = ghost.getColumn();
+        prow = (ghost.path.isEmpty()) ? grow : ghost.path.get(ghost.path.size() - 1).getX();
+        pcol = (ghost.path.isEmpty()) ? gcol : ghost.path.get(ghost.path.size() - 1).getY();
+        
+        do
+        {
+            row = generator.nextInt(30);
+            col = generator.nextInt(27);
+        }while(board.cells.get(28 * row + col).isWall(board.maze) 
+                || board.cells.get(28 * row + col).isGhostHouse(board.maze));
+        
+        
+        return board.mazeGraph.shortestPath(new Point(prow, pcol), new Point(row, col));
     }
 }

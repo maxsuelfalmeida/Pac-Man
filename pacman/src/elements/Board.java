@@ -16,7 +16,7 @@ public class Board extends Element {
     
     public char[][] maze;
     public ArrayList<Cell> cells;
-    private final Graph mazeGraph;
+    public final Graph mazeGraph;
     
     
     /**
@@ -62,23 +62,29 @@ public class Board extends Element {
         
         // Create the maze graph.
         mazeGraph = new Graph();
-        Point p = new Point(0, 0);
         for(int i = 1; i < maze.length - 1; i++) 
         {
-            for(int j = 1; j < maze[0].length - 1; j++) 
+            for(int j = 0; j < maze[0].length; j++) 
             {
-                if(maze[i][j] == '.' || maze[i][j] == 'O' || maze[i][j] == ' ') 
+                if(maze[i][j] == '.' || maze[i][j] == 'O' || maze[i][j] == '*' || maze[i][j] == ' ') 
                 {   
-                    p.setX(i);
-                    p.setY(j);
-                    if(maze[i-1][j] == '.' || maze[i-1][j] == 'O' || maze[i-1][j] == ' ')
+                    Point p = new Point(i, j);
+                    if(maze[i-1][j] == '.' || maze[i-1][j] == 'O' || maze[i-1][j] == '*' || maze[i-1][j] == ' ')
                         mazeGraph.addEdge(p, new Point(i-1, j));
-                    if(maze[i+1][j] == '.' || maze[i+1][j] == 'O' || maze[i+1][j] == ' ')
+                    if(maze[i+1][j] == '.' || maze[i+1][j] == 'O' || maze[i+1][j] == '*' || maze[i+1][j] == ' ')
                         mazeGraph.addEdge(p, new Point(i+1, j));
-                    if(maze[i][j-1] == '.' || maze[i][j-1] == 'O' || maze[i][j-1] == ' ')
+                    if(j != 0 && (maze[i][j-1] == '.' || maze[i][j-1] == 'O' ||  maze[i][j-1] == '*' || maze[i][j-1] == ' '))
                         mazeGraph.addEdge(p, new Point(i, j-1));
-                    if(maze[i][j+1] == '.' || maze[i][j+1] == 'O' || maze[i][j+1] == ' ')
-                        mazeGraph.addEdge(p, new Point(i, j+1));    
+                    if(j != maze[0].length - 1 && (maze[i][j+1] == '.' || maze[i][j+1] == 'O' || maze[i][j+1] == '*' || maze[i][j+1] == ' '))
+                        mazeGraph.addEdge(p, new Point(i, j+1));
+                    if(i == (int)(maze.length / 2 - 1) && j == 0)
+                    {
+                        Point q = new Point(i, -1);
+                        Point r = new Point(i, maze[0].length);
+                        mazeGraph.addEdge(p, q);
+                        mazeGraph.addEdge(q, r);
+                        mazeGraph.addEdge(r, new Point (i, maze[0].length - 1));
+                    }   
                 }
             }
         }

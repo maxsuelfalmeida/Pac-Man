@@ -1,11 +1,11 @@
 package graphicinterface;
 
 import elements.Board;
+import elements.Ghost;
+import elements.GhostType;
 import elements.PacMan;
 import engine.Engine;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import engine.Point;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -33,21 +33,33 @@ public class GameScreen extends Application {
     
     private PacMan pacMan;
     private Board board;
+    private Ghost blinky;
+    private Ghost inky;
     
     public GameScreen()
     {
         //Image pacImage = new Image("images/Pacman.gif", 35, 35, false, false);
         Image boardImage = new Image("images/background.png", 784, 868, true, true);
         Image[] pacImages = new Image[16];
+        Image[] blinkyImages = new Image[8];
+        Image[] inkyImages = new Image[8];
         
         for(int i = 0; i < 4; i++)
             for(int j = 0; j < 4; j++)
                 pacImages[4 * i + j] = new Image("images/pacman_" + i + "_" + j + ".png", 36, 36, false, false);
         
-        eng = new Engine();
+        for(int i = 0; i < 8; i++)
+            blinkyImages[i] = new Image("images/ghost_0" + "_" + i + ".png", 36, 36, false, false);
+        for(int i = 0; i < 8; i++)
+            inkyImages[i] = new Image("images/ghost_2" + "_" + i + ".png", 36, 36, false, false);
+                
+            
+            
+        //eng = new Engine();
         board = new Board(boardImage);
-        pacMan = new PacMan(pacImages, board, eng);
-        
+        pacMan = new PacMan(pacImages, board);
+        blinky = new Ghost(GhostType.BLINKY, 5, 6, blinkyImages, board, pacMan);
+        inky = new Ghost(GhostType.INKY, 6, 6, inkyImages, board, pacMan);
     }
     
     @Override
@@ -80,7 +92,8 @@ public class GameScreen extends Application {
                 //System.out.println(eng.direction);
                 pacMan.update();
                 board.update();
-                
+                blinky.update();
+                inky.update();
                 gc.clearRect(0, 0, stageWidth, stageWidth);
                 
                 board.render(gc);
@@ -101,7 +114,19 @@ public class GameScreen extends Application {
                            
                    }
                }*/
+               blinky.render(gc);
+               inky.render(gc);
                 pacMan.render(gc);
+                for(Point p : blinky.path)
+                {
+                    gc.fillRect(28* p.getY(), 28 * p.getX(), 10, 10);
+                }
+                for(Point p : inky.path)
+                {
+                    gc.fillRect(28* p.getY(), 28 * p.getX(), 10, 10);
+                }
+                System.out.println(inky.graphPosition.getX() + " " + inky.graphPosition.getY());
+                System.out.println(inky.getRow() + " " + inky.getColumn());
                 
             }
         }.start();
@@ -119,7 +144,7 @@ public class GameScreen extends Application {
             KeyCode key = e.getCode();
             if(key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.UP || key == KeyCode.DOWN)
             {
-                eng.nextDirection = key;
+                pacMan.eng.nextDirection = key;
             }
                 
                 
