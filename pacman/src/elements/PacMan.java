@@ -2,6 +2,7 @@ package elements;
 
 
 import engine.Engine;
+import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -16,7 +17,10 @@ public class PacMan extends Element {
     
     private Board board;
     public Engine eng;
-    private AnimatedImage animatedImage;
+    private final AnimatedImage animatedImage;
+    private int eatenPacDots;
+    private int eatenPowerPills;
+    private ArrayList<Ghost> ghosts;
     
     public PacMan(Image[] frames, Board board)
     {
@@ -25,13 +29,33 @@ public class PacMan extends Element {
         this.eng = new Engine(23, 14); 
         animatedImage = new AnimatedImage();
         animatedImage.frames = frames;
+        eatenPacDots = 0;
+        eatenPowerPills = 0;
     }
     
     @Override
     public void update()
     {
+        int row = this.getRow();
+        int col = this.getColumn();
         eng.shiftDirection(this, board);
         eng.move(this, board); 
+        if(board.cells.get(28 * row  + col).isPacDot(board.maze))
+        {
+            eatenPacDots++;
+            board.clearCell(row, col);
+        }
+        else if(board.cells.get(28 * row  + col).isPowerPill(board.maze))
+        {
+            eatenPowerPills++;
+            board.clearCell(row, col);
+            for(Ghost g : ghosts)
+            {
+                g.mode = Mode.VULNERABLE;
+                g.setFrameAnimation();
+            }
+        }
+        
     }
     
     @Override
@@ -56,5 +80,20 @@ public class PacMan extends Element {
                 break;
         }
         graphicsContext.drawImage(this.getImage(), this.getX(), this.getY());
+    }
+    
+    public int getEantenPacDots()
+    {
+        return eatenPacDots;
+    }
+    
+    public int getEantenPowerPills()
+    {
+        return eatenPowerPills;
+    }
+    
+    public void setGhosts(ArrayList<Ghost> ghosts)
+    {
+        this.ghosts = ghosts; 
     }
 }

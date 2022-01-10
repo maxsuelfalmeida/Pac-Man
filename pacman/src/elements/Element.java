@@ -1,7 +1,6 @@
 package elements;
 
 
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -17,12 +16,11 @@ public abstract class Element {
     private Image image;
     private double x;
     private double y;
-    private double velocity;
+    private double speed;
     private int row;
     private int col;
     private final int proportionX = 28;
     private final int proportionY = 28;
-    private Rectangle2D  collider;
     
     
     /**
@@ -30,29 +28,27 @@ public abstract class Element {
      * 
      * @param row Row that comprises the element in the 2D array maze.
      * @param col Column that comprises the element in the 2D array maze.
-     * @param velocity
      * @param image Element's image.
      */
-    public Element(int row, int col, double velocity, Image image)
+    public Element(int row, int col, Image image)
     {
         this.row = row; 
         this.col = col;
         x = this.proportionX * col;
         y = this.proportionY * row;
-        this.velocity = velocity;
+        this.speed = 0;
         this.image = image;
-        collider = new Rectangle2D(proportionX * col, proportionY * row, proportionX, proportionY);
     }
     
-    public Element(int row, int col, double velocity)
+    public Element(int row, int col, double speed)
     {
         this.row = row; 
         this.col = col;
         x = this.proportionX * col;
         y = this.proportionY * row;
-        this.velocity = velocity;
-        collider = new Rectangle2D(proportionX * col, proportionY * row, proportionX, proportionY);
+        this.speed = speed;
     }
+    
     
     /**
      * Get the image of  the element.
@@ -115,19 +111,19 @@ public abstract class Element {
      * Get the speed of  the element.
      * @return velocity
      */
-    public double getVelocity()
+    public double getSpeed()
     {
-        return velocity;
+        return speed;
     }
     
     /**
      * Set the speed for the element.
      * 
-     * @param velocity
+     * @param speed
      */
-    public void setVelocity(double velocity)
+    public void setSpeed(double speed)
     {
-        this.velocity = velocity;
+        this.speed= speed;
     }
     
     /**
@@ -190,16 +186,6 @@ public abstract class Element {
         return proportionY;
     }
     
-    public void updateCollider(double x, double y)
-    {
-        collider = new Rectangle2D(x, y, 28, 28);
-    }
-    
-    public Rectangle2D getCollider()
-    {
-        return collider;
-    }
-    
     /**
      * Draws the element in the canvas.
      * 
@@ -215,21 +201,4 @@ public abstract class Element {
      * 
      */
     public abstract void update();
-    
-    
-    /**
-     * Check collision with another element of the game.
-     * 
-     * @param rect Element to check collision with
-     * @return boolean
-     */
-    public boolean isCollision(Rectangle2D rect)
-    {
-        return rect.intersects(this.collider);
-    }
-    
-    public boolean isCollision(Element elem)
-    {
-        return elem.getCollider().intersects(this.collider);
-    }
 }

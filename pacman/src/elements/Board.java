@@ -25,7 +25,7 @@ public class Board extends Element {
      */
     public Board(Image image)
     {
-        super(0, 0, 0, image);
+        super(0, 0, image);
         
         // Create the maze array.
         this.maze = new char[][]{{'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'}, 
@@ -99,6 +99,11 @@ public class Board extends Element {
             }
         }
         
+    }
+    
+    public void clearCell(int row, int col)
+    {
+        maze[row][col] = ' ';
     }
     
     @Override

@@ -38,24 +38,23 @@ public class Engine {
         double y = elem.getY();
         int propX = elem.getProportionX();
         int propY = elem.getProportionY();
-        double vel = elem.getVelocity();
+        double speed = elem.getSpeed();
         
         
         switch(direction)
         {
-            case LEFT: 
+            case LEFT:
                 if(row == (int)(board.maze.length / 2 - 1) && col == 0)
                 {
-                    
                     col = board.maze[0].length;
                     colAux = col;
                     x = 784;
                 }
                 else if(!board.cells.get(28 * row + col - 1).isWall(board.maze))
                 {
-                    colAux -=  vel;
+                    colAux -=  speed;
                     col = (colAux > col - 1) ? col : col - 1;
-                    x -= propX * vel;
+                    x -= propX * speed;
                 }
                 break;
                 
@@ -68,27 +67,27 @@ public class Engine {
                 }
                 else if(!board.cells.get(28 * row + col + 1).isWall(board.maze))
                 {
-                    colAux += vel;
+                    colAux += speed;
                     col = (colAux < col + 1) ? col : col + 1;
-                    x += propX * vel;
+                    x += propX * speed;
                 }
                 break;
                 
             case UP:
                 if(!board.cells.get(28 * row + col - 28).isWall(board.maze))
                 {
-                    rowAux -= vel;
+                    rowAux -= speed;
                     row = (rowAux > row - 1) ? row : row - 1;
-                    y -= propY * vel;
+                    y -= propY * speed;
                 }
                 break;
                 
             case DOWN:
                 if(!board.cells.get(28 * row + col + 28).isWall(board.maze))
                 {
-                    rowAux += vel;
+                    rowAux += speed;
                     row = (rowAux < row + 1) ? row : row + 1;
-                    y += propY * vel;
+                    y += propY * speed;
                 }
                 break; 
                 
@@ -138,37 +137,12 @@ public class Engine {
         }
     }
     
-    /*-----------------------------------------------------------Ghost Methods ------------------------------------------------------------------*/
+    
     
     public ArrayList<Point> getPath(Ghost ghost, Board board, PacMan pacMan)
-    {
-        ArrayList<Point> path;
-        
-        switch(ghost.mode)
-        {
-            case NORMAL:
-                if(ghost.type == GhostType.PINKY || ghost.type == GhostType.BLINKY)
-                    path = board.mazeGraph.shortestPath(new Point(ghost.getRow(), ghost.getColumn()), new Point(pacMan.getRow(), pacMan.getColumn()));
-                else
-                    path = this.getRandomPath(ghost, board);
-                    
-                break;
-            case VULNERABLE:
-                path = this.runaway();
-                break;
-                
-            default:
-                path = this.backToGhostHouse(ghost, board);
-                break;
-        }
-        
-        return path;
-    }
-    
-    
-    public ArrayList<Point> runaway()
-    {
-        return null;
+    {  
+        return board.mazeGraph.shortestPath(new Point(ghost.getRow(), ghost.getColumn())
+                                                        , new Point(pacMan.getRow(), pacMan.getColumn()));
     }
     
     public ArrayList<Point> backToGhostHouse(Ghost ghost, Board board)

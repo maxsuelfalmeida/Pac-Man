@@ -47,6 +47,26 @@ public class Cell {
         return maze[row][col] == '*';
     }
     
+    public boolean isPacDot(char[][] maze)
+    {
+        return maze[row][col] == '.';
+    }
+    
+    public boolean isPowerPill(char[][] maze)
+    {
+        return maze[row][col] == 'O';
+    }
+    
+    public int getRow()
+    {
+        return row;
+    }
+    
+    public int getColumn()
+    {
+        return col;
+    }
+    
     public Rectangle2D getCollider()
     {
         return collider;

@@ -15,7 +15,11 @@ import javafx.scene.image.Image;
 public class AnimatedImage {
     public Image[] frames;
     public double duration;
-
+    
+    public AnimatedImage()
+    {
+        frames = new Image[16];
+    }
     /**
      *
      * @param direction

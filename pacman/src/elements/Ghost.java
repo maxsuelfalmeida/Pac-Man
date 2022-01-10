@@ -25,42 +25,52 @@ public class Ghost extends Element {
    public Mode mode;
    public final GhostType type;
    public ArrayList<Point> path;
-   public int savePathSize;
    public AnimatedImage animatedImage;
+   public Image[] frames;
    public Point graphPosition;
+  
    
    public Ghost(GhostType type, int row, int col,  Image[] frames, Board board, PacMan pacMan)
    {
-       super(row, col, 0.11);
+       super(row, col, Speed.GHOST_NORMAL_SPEED);
        this.board = board;
        this.eng = new Engine(row, col);
        this.pacMan = pacMan;
        mode = Mode.NORMAL;
        this.type = type;
        path = new ArrayList<>();
-       savePathSize = 0;
        animatedImage = new AnimatedImage();
-       animatedImage.frames = frames;
+       this.frames = frames;
+       this.setFrameAnimation();
        graphPosition = new Point(row, col);
    }
    
    @Override
    public void update()
    {
-       switch(this.type)
+       switch(mode)
        {
-            case BLINKY:
-            case PINKY:
-               path = eng.getPath(this, board, pacMan);
+           case NORMAL:
+               if(type == GhostType.BLINKY || type == GhostType.PINKY)
+                   path = eng.getPath(this, board, pacMan);
+               else if(path.size() < 2)
+                   path.addAll(eng.getRandomPath(this, board));
                break;
                
-            default:
-                if(path.size() < 2)
-                    path.addAll(eng.getPath(this, board, pacMan));
-                
+           case VULNERABLE:
+               path.removeAll(path);
+               if(path.size() < 2)
+                   path.addAll(eng.getRandomPath(this, board));
+               break;
+               
+           case DIED:
+               //this.setSpeed(GhostSpeed.DIED_SPEED);
+               path = eng.backToGhostHouse(this, board);
+               break;
+               
+           default:
+               break;
        }
-       
-       
        if((this.getRow() == graphPosition.getX() && this.getColumn() == graphPosition.getY())
                || (graphPosition.getY() == -1 || graphPosition.getY() == 28))
        {
@@ -103,5 +113,23 @@ public class Ghost extends Element {
                 break;
         }
         graphicsContext.drawImage(this.getImage(), this.getX(), this.getY());
+    }
+    
+    public void setFrameAnimation()
+    {
+        switch(mode)
+        {
+            case NORMAL:
+                System.arraycopy(frames, 0, animatedImage.frames, 0, 8);
+                break;
+                
+            case VULNERABLE:
+                System.arraycopy(frames, 12, animatedImage.frames, 0, 4);
+                break;
+                
+            case DIED:
+                System.arraycopy(frames, 8, animatedImage.frames, 0, 4);
+                break;
+        }
     }
 }
