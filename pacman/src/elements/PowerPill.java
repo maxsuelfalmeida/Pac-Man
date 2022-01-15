@@ -8,19 +8,12 @@ import javafx.scene.image.Image;
  * @author Maxsuel F. Almeida
  */
 public class PowerPill extends Element {
+    
     private final int value;
     
-    public PowerPill(int row, int col, Image image)
-    {
+    public PowerPill(int row, int col, Image image) {
         super(row, col, image);
         value = 50;
-        
-    }
-    
-    @Override 
-    public void update()
-    {
-        
     }
     
     @Override
@@ -32,9 +25,12 @@ public class PowerPill extends Element {
             graphicsContext.drawImage(this.getImage(), this.getX() + 10, this.getY() + 10);
     }
     
+    /**
+     * Return the value of the food.
+     * @return The value of the food.
+     */
     public int getValue()
     {
         return value;
     }
-    
 }

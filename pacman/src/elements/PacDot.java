@@ -12,16 +12,16 @@ public class PacDot extends Element{
     
     private final int value;
     
+    /**
+     * The class contructor.
+     * @param row
+     * @param col
+     * @param image
+     */
     public PacDot(int row, int col, Image image)
     {
         super(row, col, image);
         value = 10;
-    }
-    
-    @Override 
-    public void update()
-    {
-        
     }
     
     @Override
@@ -30,6 +30,10 @@ public class PacDot extends Element{
         graphicsContext.drawImage(this.getImage(), this.getX() + 14, this.getY() + 14);
     }
     
+    /**
+     * Return the value of the food.
+     * @return The value of the food.
+     */
     public int getValue()
     {
         return value;

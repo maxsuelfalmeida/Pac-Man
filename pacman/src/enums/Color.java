@@ -6,7 +6,7 @@ package enums;
  * @author Maxsuel F. de Almeida
  */
 public enum Color {
-        WHITE,
-        GRAY,
-        BLACK
+    WHITE,
+    GRAY,
+    BLACK
 }

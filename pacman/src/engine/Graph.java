@@ -13,38 +13,45 @@ import java.util.Set;
  */
 public class Graph {
     
+    /*Vertices of the graph*/
     public Set<Vertex> V;
     
-    public Graph() 
-    {
+    /**
+     * The class constructor.
+     */
+    public Graph() {
         V = new HashSet<>();
     }
     
-    public void addVertex(Point p) 
-    {
+    /**
+     * Given a point, add it as a vertex of the graph.
+     * @param p The point to be added.
+     */
+    public void addVertex(Point p) {
         Vertex v = new Vertex(p);
         V.add(v);
     }
     
-    public void addEdge(Point p, Point q) 
-    {
+    /**
+     * Given two points, add they into the graph and creat an edge between them.
+     * @param p The first point.
+     * @param q The second point.
+     */
+    public void addEdge(Point p, Point q) {
         
         Vertex u = null, v = null;
         
-        for(Vertex w : V) 
-        {
+        for(Vertex w : V) {
             if(w.label.getX() == p.getX() && w.label.getY() == p.getY()) u = w;
             if(w.label.getX() == q.getX() && w.label.getY() == q.getY()) v = w;
         }
         
-        if(u == null) 
-        {
+        if(u == null) {
             u = new Vertex(p);
             V.add(u);
         }
         
-        if(v == null) 
-        {
+        if(v == null) {
             v = new Vertex(q);
             V.add(v);
         }
@@ -62,7 +69,7 @@ public class Graph {
      * 
      * @throws Exception 
      */
-    public void breadthFirstSearch(Point start) throws Exception{
+    public void breadthFirstSearch(Point start) throws Exception {
         
         ArrayList<Vertex> Q = new ArrayList<>();
         Vertex s = null, u;
@@ -76,15 +83,12 @@ public class Graph {
         s.distance = 0;
         Q.add(s);
         
-        while(!Q.isEmpty()) 
-        {
+        while(!Q.isEmpty()) {
             u = Q.get(0);
             Q.remove(u);
             
-            for(Vertex v: u.neighbours) 
-            {
-                if(v.color.equals(Color.WHITE)) 
-                {
+            for(Vertex v: u.neighbours) {
+                if(v.color.equals(Color.WHITE)) {
                     v.color = Color.GRAY;
                     v.distance = u.distance + 1;
                     v.predecessor = u;
@@ -107,11 +111,8 @@ public class Graph {
      * @param end   Final node.
      * @return  ArrayList comprising the shortest path.
      */
-    public ArrayList<Point> shortestPath(Point start, Point end) 
-    {
-        
-        try 
-        {
+    public ArrayList<Point> shortestPath(Point start, Point end) {
+        try {
             this.restartBFS();
             breadthFirstSearch(start);
                
@@ -119,8 +120,7 @@ public class Graph {
             Vertex pre = null;
             ArrayList<Point> shortestPathList = new ArrayList<>();
             
-            for(Vertex v : V) 
-            {
+            for(Vertex v : V) {
                 if(v.label.getX() == end.getX() && v.label.getY() == end.getY()) 
                 {
                     u = v;
@@ -129,26 +129,25 @@ public class Graph {
             }
             shortestPathList.add(end);
             
-            while(pre != null && pre.predecessor != null) 
-            {
+            while(pre != null && pre.predecessor != null) {
                 shortestPathList.add(0, pre.label);
                 pre = pre.predecessor;
             }
             
             return shortestPathList;
         }
-        catch(Exception e) 
-        {
+        catch(Exception e) {
             System.out.println(e.getMessage());
         }
         
         return null;
     }
     
-    public void restartBFS()
-    {
-        for(Vertex v : V)
-        {
+    /**
+     * Restart the BFS algorithm.
+     */
+    public void restartBFS() {
+        for(Vertex v : V) {
             v.color = Color.WHITE;
             v.distance = 0;
             v.predecessor = null;

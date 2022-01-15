@@ -1,10 +1,12 @@
 package elements;
 
 
-import engine.Engine;
-import java.util.ArrayList;
+import enums.Mode;
+import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 
 /**
@@ -14,54 +16,32 @@ import javafx.scene.image.Image;
  */
 public class PacMan extends Element {
     
-    
-    private Board board;
-    public Engine eng;
     private final AnimatedImage animatedImage;
-    private int eatenPacDots;
-    private int eatenPowerPills;
-    private ArrayList<Ghost> ghosts;
+    public final Image[] frames;
     
-    public PacMan(Image[] frames, Board board)
+    public Mode mode;
+    public long diedTime;
+    public int eatenPacDots;
+    
+    /**
+     * The class constructor.
+     * @param frames
+     */
+    public PacMan(Image[] frames)
     {
         super(23, 14, 0.11);
-        this.board = board;
-        this.eng = new Engine(23, 14); 
-        animatedImage = new AnimatedImage();
-        animatedImage.frames = frames;
+        animatedImage = new AnimatedImage(16);
+        this.frames = frames;
+        mode = Mode.NORMAL;
+        this.setFrameAnimation();
+        diedTime = 0;
         eatenPacDots = 0;
-        eatenPowerPills = 0;
-    }
-    
-    @Override
-    public void update()
-    {
-        int row = this.getRow();
-        int col = this.getColumn();
-        eng.shiftDirection(this, board);
-        eng.move(this, board); 
-        if(board.cells.get(28 * row  + col).isPacDot(board.maze))
-        {
-            eatenPacDots++;
-            board.clearCell(row, col);
-        }
-        else if(board.cells.get(28 * row  + col).isPowerPill(board.maze))
-        {
-            eatenPowerPills++;
-            board.clearCell(row, col);
-            for(Ghost g : ghosts)
-            {
-                g.mode = Mode.VULNERABLE;
-                g.setFrameAnimation();
-            }
-        }
-        
     }
     
     @Override
     public void render(GraphicsContext graphicsContext)
     {
-        switch(eng.direction)
+        switch(direction)
         {
             case LEFT:
                 this.setImage(animatedImage.getFrame(2, 4));
@@ -79,21 +59,31 @@ public class PacMan extends Element {
                 this.setImage(animatedImage.getFrame(0, 4));
                 break;
         }
+        
         graphicsContext.drawImage(this.getImage(), this.getX(), this.getY());
     }
     
-    public int getEantenPacDots()
-    {
-        return eatenPacDots;
+    /**
+     * Get the key pressed by the player and stores it in the next direction 
+     * atribute.
+     * 
+     * @param scene
+     */
+    public void setNextDirection(Scene scene) {
+        
+        scene.setOnKeyPressed((KeyEvent e) -> 
+        {
+            KeyCode key = e.getCode();
+            if(key == KeyCode.LEFT || key == KeyCode.RIGHT || key == KeyCode.UP || key == KeyCode.DOWN) {
+                nextDirection = key;
+            }     
+        });
     }
     
-    public int getEantenPowerPills()
-    {
-        return eatenPowerPills;
-    }
-    
-    public void setGhosts(ArrayList<Ghost> ghosts)
-    {
-        this.ghosts = ghosts; 
+    /**
+     * Set which images will be used in the animation.
+     */
+    public void setFrameAnimation() {
+        System.arraycopy(frames, 0, animatedImage.frames, 0, 16);   
     }
 }

@@ -1,17 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pacman;
 
 import graphicinterface.GameScreen;
-import javafx.application.Application;
-import javafx.stage.Stage;
 
 /**
- *
- * @author 55189
+ * The main class.
+ * @author Maxsuel F. de Almeida.
  */
 public class Pacman{
 

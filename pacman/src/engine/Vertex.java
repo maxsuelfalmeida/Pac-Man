@@ -12,7 +12,6 @@ import java.util.Set;
  * @author Maxsuel F. de Almeida
  */
 public class Vertex {
-        
     
     public Point label;
     public Color color;

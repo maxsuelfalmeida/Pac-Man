@@ -1,34 +1,37 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package elements;
 
 import javafx.scene.image.Image;
 
 /**
- * Animates the elements image.
+ * Createa the elements' animation.
  * 
  * @author Maxsuel F. Almeida
  */
 public class AnimatedImage {
-    public Image[] frames;
-    public double duration;
+    // All the images that make the animation.
+    protected Image[] frames;
     
-    public AnimatedImage()
-    {
-        frames = new Image[16];
-    }
     /**
      *
-     * @param direction
-     * @return
+     * @param length
      */
-    public Image getFrame(int direction, int corr)
-    {
-        int index;
-        index = corr * direction + (int)(System.nanoTime() * 0.00000002) % corr;
-        return frames[index];
+    public AnimatedImage(int length) {
+        frames = new Image[length];
     }
+    
+    /**
+     * Get the frame to be painted.
+     * @param direction The current direction of the element. 
+     * @param imagesPerDirection The number of image that is part of the 
+     * animation in one direction.
+     * @return The frame to be painted.
+     */
+    public Image getFrame(int direction, int imagesPerDirection) {
+        return frames[imagesPerDirection * direction + (int)(System.nanoTime() * 0.00000002) % imagesPerDirection];
+    }
+    
+    /*public Image getFrame(int direction, int imagesPerDirection, boolean slowAnimation) {
+        return frames[imagesPerDirection * direction + (int)(System.nanoTime() * 0.000000008) % imagesPerDirection];
+    }*/
 }
+//return frames[imagesPerDirection * direction + (int)(System.nanoTime() * 0.00000002) % imagesPerDirection];
