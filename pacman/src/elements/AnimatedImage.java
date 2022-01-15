@@ -29,9 +29,4 @@ public class AnimatedImage {
     public Image getFrame(int direction, int imagesPerDirection) {
         return frames[imagesPerDirection * direction + (int)(System.nanoTime() * 0.00000002) % imagesPerDirection];
     }
-    
-    /*public Image getFrame(int direction, int imagesPerDirection, boolean slowAnimation) {
-        return frames[imagesPerDirection * direction + (int)(System.nanoTime() * 0.000000008) % imagesPerDirection];
-    }*/
 }
-//return frames[imagesPerDirection * direction + (int)(System.nanoTime() * 0.00000002) % imagesPerDirection];
