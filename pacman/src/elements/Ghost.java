@@ -8,7 +8,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 /**
- * This class represents the ghost.
+ * This class represents the ghosts.
+ * 
+ * Each ghost will be a instance of this class.
  * 
  * @author Maxsuel F. Almeida
  */
@@ -23,11 +25,13 @@ public class Ghost extends Element {
    public long vulnerableTime;
    
     /**
-     * The class constructor.
-     * @param type
-     * @param row
-     * @param col
-     * @param frames
+     * Constructor of the class.
+     * 
+     * @param type The type of the ghost.
+     * @param row  Row of the ghost in the board.
+     * @param col  Column of the ghost in the board.
+     * @param frames All the images that are part of
+     * the animation of the ghost.
      */
     public Ghost(GhostType type, int row, int col,  Image[] frames) {
        
@@ -91,8 +95,7 @@ public class Ghost extends Element {
     }
     
     /**
-     * Set the ghost speed depending on the level of the game ande de mode of
-     * ghost.
+     * Set the ghost speed depending on its mode and the level of the game.
      * 
      * @param speedFactor Factor that depends of the level of the game.
      */

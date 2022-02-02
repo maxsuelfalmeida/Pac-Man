@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 /**
- * This class is for the fruits of the game.
+ * This class represents the fruits of the game.
  * 
  * Each fruit will be a instance of such class.
  * 
@@ -19,8 +19,8 @@ public class Fruit extends Element{
     /**
      * Constructor of the class.
      * 
-     * @param row Fruit's row in the board.
-     * @param col Fruit's col in the board.
+     * @param row Row of the fruit in the board.
+     * @param col Column of the fruit in the board.
      * @param type Fruit type.
      * @param value Fruit value in terms of score.
      * @param image Image of the fruit.

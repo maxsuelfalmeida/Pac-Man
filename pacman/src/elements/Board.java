@@ -22,8 +22,9 @@ public class Board extends Element {
     
     
     /**
-     * Default constructor.
-     * @param image The background.
+     * Constructor of the class.
+     * 
+     * @param image The background image.
      */
     public Board(Image image) {
         super(0, 0, image);

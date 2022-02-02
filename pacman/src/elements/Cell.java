@@ -3,20 +3,17 @@ package elements;
 import javafx.geometry.Rectangle2D;
 
 /**
- * The porpuse of this class is helping in check collisions.
+ * The porpuse of this class is helping in check collisions with the walls
+ * and the ghosts' house.
  * 
  * @author Maxsuel F. de Almeida
  */
 public class Cell {
     private final int row;
     private final int col;
-    private final double x;
-    private final double y;
-    private final int width;
-    private final int height;
-    private final Rectangle2D collider;
+    
     /**
-     * Constructor.
+     * Constructor of the class.
      * 
      * @param row The cell's row
      * @param col The cell's column
@@ -25,15 +22,11 @@ public class Cell {
     {
         this.row = row;
         this.col = col;
-        width = 27;
-        height = 27;
-        x = 28 * col;
-        y = 28 * row;
-        collider = new Rectangle2D(x, y, width, height);
     }
     
     /**
      * Given the maze, check if the cell is a wall.
+     * 
      * @param maze The game data maze
      * @return boolean
      */
@@ -46,29 +39,12 @@ public class Cell {
     {
         return maze[row][col] == '*';
     }
-    
-    public boolean isPacDot(char[][] maze)
-    {
-        return maze[row][col] == '.';
+
+    public boolean isLeftPortal(char[][] maze) {
+        return (row == (int) (maze.length / 2 - 1) && col == 0);
     }
-    
-    public boolean isPowerPill(char[][] maze)
-    {
-        return maze[row][col] == 'O';
-    }
-    
-    public int getRow()
-    {
-        return row;
-    }
-    
-    public int getColumn()
-    {
-        return col;
-    }
-    
-    public Rectangle2D getCollider()
-    {
-        return collider;
+
+    public boolean isRightPortal(char maze[][]) {
+        return (row == (int) (maze.length / 2 - 1) && col == maze[0].length - 1);
     }
 }

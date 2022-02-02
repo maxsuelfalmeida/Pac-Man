@@ -10,7 +10,7 @@ import javafx.scene.input.KeyEvent;
 
 
 /**
- * Represents the pacman element.
+ * This class represents the pacman.
  * 
  * @author Maxsuel F. de Almeida
  */
